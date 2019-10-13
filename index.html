@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+  
+<script>
+// ToDo list
+// Вам нужно создать список задач, который умеет:
+// добавлять новые задачи и проверять их уникальность. У каждой задачи есть статус, время создания и текст
+// удалять задачу, но с условием (тут передаете в качестве аргумента confirm)
+// редактировать задачу (тоже спрашиваете нужно ли сохранить изменения)
+// выводить общее количество задач, сколько выполнили и сколько осталось
+// генерировать id для ваших заметок
+// сортировать в зависимости от условия - по алфавиту задачи или по статусу
+// не просто объект - вам нужно сделать так, чтоб в него нельзя было вносить изменения, чтоб никто не переписал случайно его методы)
+
+
+var toDo = {
+    notes: [
+        {
+            text: 'text first note',
+            status: true,
+            date: '15/10/2019',
+            id:'01',
+        },
+        {
+            text: 'text second note',
+            status: false,
+            date: '16/10/2019',
+            id: '210',
+        },
+        {
+            text: 'note',
+            status: true,
+            date: '17/10/2019',
+            id: '20',
+        },
+    ],
+    createNote: function(textNote) {
+        this.notes.push({
+            text: textNote,
+            status: false,
+            date: '07/10/2019',
+            // id: (new Date()).getTime(),
+            
+        })
+    },
+    removeNote: function(id,quest) {
+        if(quest){
+            var currentNoteId = this.findcurrentNoteById(id);
+            this.notes.splice(currentNoteId, 1);
+        }
+    },
+    updateNote: function(id,newText,quest) {
+        if(quest){
+            var currentNoteId = this.findcurrentNoteById(id);
+            this.notes[currentNoteId].text = newText;
+        }
+    },
+    setNoteStatus: function(id) {
+        var currentNoteId = this.findcurrentNoteById(id);
+        this.notes[currentNoteId].status = !this.notes[currentNoteId].status
+    },
+
+    groupNote: function() {
+        var allNotes = this.notes.length;
+        var doneNotes = this.allDoneNotes().length;
+        return allNotes + '/' + doneNotes;
+    },
+
+    allDoneNotes: function(){
+        return this.notes.filter(function(note) {
+            if(note.status){
+                return note;
+            }
+        });
+    },
+    findcurrentNoteById: function(id) {
+        return this.notes.findIndex(function(note) {
+            if(note.id === id) {
+                return note;
+            }
+        });
+    },
+    createIdNote: function() {
+        var uniq = (new Date()).getTime();
+        this.notes.forEach(function(note){
+            note.id = uniq
+        })        
+    },
+    sortNoteABC: function() { 
+        var sortAbc = this.notes.sort(function(a,b){
+            var textA=a.text.toLowerCase(),
+                textB=b.text.toLowerCase()
+            if (textA < textB)
+                return -1;
+            if (textA > textB)
+                return 1;
+            return 0;
+        });
+        return sortAbc;
+    }, 
+    sortNoteStatus: function() { 
+        var sortStatus = this.notes.sort(function(a,b){
+            return a.status - b.status;
+        })
+        return sortStatus;
+    },  
+};
+
+Object.freeze(toDo);
+toDo.a = function(){return 2+3}
+console.log(toDo)
+
+toDo.createNote('hi');
+toDo.createNote('ai you');
+console.log(toDo.notes)
+
+toDo.updateNote('01', 'bla-bla', confirm('Update note?'));
+console.log(toDo.notes);
+
+toDo.removeNote('210', confirm('Delete note?'))
+console.log(toDo.notes);
+
+toDo.setNoteStatus('01')
+console.log(toDo.notes);
+
+toDo.groupNote()
+console.log(toDo.groupNote());
+
+toDo.createIdNote()
+console.log(toDo.notes);
+
+toDo.sortNoteABC();
+console.log(toDo.sortNoteABC());
+
+toDo.sortNoteStatus();
+console.log(toDo.sortNoteStatus());
+
+</script>
+</body>
+</html>
